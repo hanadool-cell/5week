@@ -30,22 +30,23 @@
             color: #FFFFFF;
             margin: 0;
         }
-
+        
+        
         #startButton {
             font-family: 'Yangjin', sans-serif;
             font-size: 1.8em;
-            padding: 16px 40px;
+            padding: 15px 40px;
             cursor: pointer;
             border: none;
             background-color: #f7d794;
             color: #333;
-            
-            display: flex;
+            display: flex; 
             align-items: center;
             justify-content: center;
         }
 
-       
+        #startButton:hover {
+            background-color: #e6c581;
         }
 
         .game-info {
@@ -116,8 +117,7 @@
     const gameInfo = document.querySelector('.game-info');
 
     
-    
-const images = ['./img1.jpg', './img2.jpg', './img3.jpg', './img4.jpg', './img5.jpg', './img6.jpg', './img7.jpg', './img8.jpg'];
+    const images = ['./img1.jpg', './img2.jpg', './img3.jpg', './img4.jpg', './img5.jpg', './img6.jpg', './img7.jpg', './img8.jpg'];
     const cardsArray = [...images, ...images];
 
     let flippedCards = [];
