@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>같은 그림 찾기 게임</title>
+    <style>
+        @font-face {
+            font-family: 'Yangjin';
+            src: url('https://cdn.jsdelivr.net/gh/supernovice-lab/font@0.9/yangjin.woff') format('woff');
+            font-weight: normal;
+            font-display: swap;
+        }
+
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #333;
+            flex-direction: column;
+            margin: 0;
+            overflow: hidden;
+            gap: 30px;
+        }
+
+        h1 {
+            font-family: 'Yangjin', sans-serif;
+            font-size: 3.5em;
+            color: #FFFFFF;
+            margin: 0;
+            
+        }
+
+        .game-info {
+            font-size: 1.5em;
+            color: white;
+            margin: 0;
+            background-color: rgba(0,0,0,0.1);
+            padding: 10px 20px;
+        }
+        
+        .game-board {
+            display: grid;
+            
+            grid-template-columns: repeat(4, 120px); 
+            grid-gap: 10px; 
+            perspective: 1000px;
+        }
+        .card {
+            
+            width: 120px; 
+            height: 120px; 
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+        }
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3em;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .card-front {
+            background-color: #f0f0f0;
+            transform: rotateY(180deg);
+        }
+        .card-front img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .card-back {
+            background-color: #555;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<h1>같은 고양이를 찾아보라옹🐈</h1>
+
+<div class="game-info">
+    <span id="timer">60</span> 초 남았다옹~
+</div>
+<div class="game-board" id="game-board"></div>
+
+<script>
+    const gameBoard = document.getElementById('game-board');
+    const timerDisplay = document.getElementById('timer');
+
+    const images = ['그림1.jpg', '그림2.jpg', '그림3.jpg', '그림4.jpg', '그림5.jpg', '그림6.jpg', '그림7.jpg', '그림8.jpg'];
+    const cardsArray = [...images, ...images];
+
+    let flippedCards = [];
+    let matchedPairs = 0;
+    let lockBoard = false;
+    let gameTimer;
+    let time = 60;
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+    
+    function startGame() {
+        shuffle(cardsArray);
+        gameBoard.innerHTML = '';
+        matchedPairs = 0;
+        time = 60;
+        timerDisplay.textContent = time;
+
+        cardsArray.forEach(imageSrc => {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.dataset.image = imageSrc;
+            card.innerHTML = `
+                <div class="card-face card-front">
+                    <img src="${imageSrc}" alt="카드 이미지">
+                </div>
+                <div class="card-face card-back">❔</div>
+            `;
+            gameBoard.appendChild(card);
+            card.addEventListener('click', flipCard);
+        });
+        
+        clearInterval(gameTimer);
+        gameTimer = setInterval(updateTimer, 1000);
+    }
+    
+    function flipCard() {
+        if (lockBoard || this.classList.contains('flipped')) return;
+        
+        this.classList.add('flipped');
+        flippedCards.push(this);
+
+        if (flippedCards.length === 2) {
+            checkForMatch();
+        }
+    }
+    
+    function checkForMatch() {
+        lockBoard = true;
+        const [card1, card2] = flippedCards;
+
+        if (card1.dataset.image === card2.dataset.image) {
+            disableCards();
+        } else {
+            unflipCards();
+        }
+    }
+    
+    function disableCards() {
+        flippedCards[0].removeEventListener('click', flipCard);
+        flippedCards[1].removeEventListener('click', flipCard);
+        
+        matchedPairs++;
+        resetBoard();
+
+        if (matchedPairs === images.length) {
+            clearInterval(gameTimer);
+            setTimeout(() => alert('성공! 축하한다옹~'), 500);
+        }
+    }
+    
+    function unflipCards() {
+        setTimeout(() => {
+            flippedCards[0].classList.remove('flipped');
+            flippedCards[1].classList.remove('flipped');
+            resetBoard();
+        }, 1000);
+    }
+    
+    function resetBoard() {
+        flippedCards = [];
+        lockBoard = false;
+    }
+    
+    function updateTimer() {
+        time--;
+        timerDisplay.textContent = time;
+        if (time === 0) {
+            clearInterval(gameTimer);
+            alert('실패! 정진하라옹~');
+            lockBoard = true;
+        }
+    }
+
+    startGame();
+</script>
+
+</body>
+</html>
