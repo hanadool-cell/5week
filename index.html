@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>고양이를 찾아라옹</title>
+    <title>같은 그림 찾기 게임</title>
     <style>
         @font-face {
             font-family: 'Yangjin';
@@ -31,24 +31,20 @@
             margin: 0;
         }
 
-       
         #startButton {
             font-family: 'Yangjin', sans-serif;
             font-size: 1.8em;
-            padding: 18px 50px;
-            
+            padding: 15px 40px;
+            cursor: pointer;
             border: none;
             background-color: #f7d794;
             color: #333;
-            margin bottom: 10px;
-            
-            
-            
-
-            /
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: background-color 0.3s;
+            border-radius: 50px; 
             display: flex;
-            
-            
+            align-items: center;
+            justify-content: center;
         }
 
         #startButton:hover {
@@ -122,7 +118,9 @@
     const startButton = document.getElementById('startButton');
     const gameInfo = document.querySelector('.game-info');
 
-    const images = ['그림1.jpg', '그림2.jpg', '그림3.jpg', '그림4.jpg', '그림5.jpg', '그림6.jpg', '그림7.jpg', '그림8.jpg'];
+    // --- 여기가 수정되었습니다 ---
+    // GitHub Pages 배포를 위해 이미지 경로를 상대 경로('./')로 변경
+    const images = ['./그림1.jpg', './그림2.jpg', './그림3.jpg', './그림4.jpg', './그림5.jpg', './그림6.jpg', './그림7.jpg', './그림8.jpg'];
     const cardsArray = [...images, ...images];
 
     let flippedCards = [];
@@ -246,7 +244,7 @@
 
     function showRestartButton() {
         startButton.textContent = '다시하기';
-        startButton.style.display = 'flex'; 
+        startButton.style.display = 'flex';
     }
 </script>
 
