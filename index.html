@@ -29,7 +29,30 @@
             font-size: 3.5em;
             color: #FFFFFF;
             margin: 0;
+        }
+
+       
+        #startButton {
+            font-family: 'Yangjin', sans-serif;
+            font-size: 1.8em;
+            padding: 18px 50px;
             
+            border: none;
+            background-color: #f7d794;
+            color: #333;
+            margin bottom: 10px;
+            
+            
+            
+
+            /
+            display: flex;
+            
+            
+        }
+
+        #startButton:hover {
+            background-color: #e6c581;
         }
 
         .game-info {
@@ -38,17 +61,16 @@
             margin: 0;
             background-color: rgba(0,0,0,0.1);
             padding: 10px 20px;
+            visibility: hidden;
         }
         
         .game-board {
             display: grid;
-            
             grid-template-columns: repeat(4, 120px); 
             grid-gap: 10px; 
             perspective: 1000px;
         }
         .card {
-            
             width: 120px; 
             height: 120px; 
             position: relative;
@@ -88,7 +110,7 @@
 <body>
 
 <h1>같은 고양이를 찾아보라옹🐈</h1>
-
+<button id="startButton">시작하기</button>
 <div class="game-info">
     <span id="timer">60</span> 초 남았다옹~
 </div>
@@ -97,15 +119,19 @@
 <script>
     const gameBoard = document.getElementById('game-board');
     const timerDisplay = document.getElementById('timer');
+    const startButton = document.getElementById('startButton');
+    const gameInfo = document.querySelector('.game-info');
 
     const images = ['그림1.jpg', '그림2.jpg', '그림3.jpg', '그림4.jpg', '그림5.jpg', '그림6.jpg', '그림7.jpg', '그림8.jpg'];
     const cardsArray = [...images, ...images];
 
     let flippedCards = [];
     let matchedPairs = 0;
-    let lockBoard = false;
+    let lockBoard = true;
     let gameTimer;
     let time = 60;
+
+    startButton.addEventListener('click', startGame);
 
     function shuffle(array) {
         for (let i = array.length - 1; i > 0; i--) {
@@ -115,15 +141,19 @@
     }
     
     function startGame() {
+        startButton.style.display = 'none';
+        gameInfo.style.visibility = 'visible';
+        
         shuffle(cardsArray);
         gameBoard.innerHTML = '';
         matchedPairs = 0;
         time = 60;
         timerDisplay.textContent = time;
+        lockBoard = true;
 
         cardsArray.forEach(imageSrc => {
             const card = document.createElement('div');
-            card.classList.add('card');
+            card.classList.add('card', 'flipped');
             card.dataset.image = imageSrc;
             card.innerHTML = `
                 <div class="card-face card-front">
@@ -134,9 +164,22 @@
             gameBoard.appendChild(card);
             card.addEventListener('click', flipCard);
         });
-        
-        clearInterval(gameTimer);
-        gameTimer = setInterval(updateTimer, 1000);
+
+        let countdown = 3;
+        timerDisplay.innerHTML = `준비... <span style="color: #f7d794;">${countdown}</span>`;
+
+        const countdownInterval = setInterval(() => {
+            countdown--;
+            timerDisplay.innerHTML = `준비... <span style="color: #f7d794;">${countdown}</span>`;
+            if (countdown === 0) {
+                clearInterval(countdownInterval);
+                timerDisplay.textContent = time;
+                
+                document.querySelectorAll('.card').forEach(card => card.classList.remove('flipped'));
+                lockBoard = false;
+                gameTimer = setInterval(updateTimer, 1000);
+            }
+        }, 1000);
     }
     
     function flipCard() {
@@ -170,7 +213,10 @@
 
         if (matchedPairs === images.length) {
             clearInterval(gameTimer);
-            setTimeout(() => alert('성공! 축하한다옹~'), 500);
+            setTimeout(() => {
+                alert('성공! 축하한다옹~');
+                showRestartButton();
+            }, 500);
         }
     }
     
@@ -190,14 +236,18 @@
     function updateTimer() {
         time--;
         timerDisplay.textContent = time;
-        if (time === 0) {
+        if (time <= 0) {
             clearInterval(gameTimer);
             alert('실패! 정진하라옹~');
             lockBoard = true;
+            showRestartButton();
         }
     }
 
-    startGame();
+    function showRestartButton() {
+        startButton.textContent = '다시하기';
+        startButton.style.display = 'flex'; 
+    }
 </script>
 
 </body>
