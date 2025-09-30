@@ -34,21 +34,18 @@
         #startButton {
             font-family: 'Yangjin', sans-serif;
             font-size: 1.8em;
-            padding: 15px 40px;
+            padding: 16px 40px;
             cursor: pointer;
             border: none;
             background-color: #f7d794;
             color: #333;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-            transition: background-color 0.3s;
-            border-radius: 50px; 
+            
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        #startButton:hover {
-            background-color: #e6c581;
+       
         }
 
         .game-info {
@@ -118,9 +115,9 @@
     const startButton = document.getElementById('startButton');
     const gameInfo = document.querySelector('.game-info');
 
-    // --- 여기가 수정되었습니다 ---
-    // 이 부분을 복사해서 코드에 붙여넣으세요.
-    const images = ['그림1.jpg', '그림2.jpg', '그림3.jpg', '그림4.jpg', '그림5.jpg', '그림6.jpg', '그림7.jpg', '그림8.jpg'];
+    
+    
+const images = ['./img1.jpg', './img2.jpg', './img3.jpg', './img4.jpg', './img5.jpg', './img6.jpg', './img7.jpg', './img8.jpg'];
     const cardsArray = [...images, ...images];
 
     let flippedCards = [];
